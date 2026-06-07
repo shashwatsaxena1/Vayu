@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VAYU | Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header class="header">
+  <h1>VAYU Dashboard</h1>
+  <p>Your Personalized Air Health Report</p>
+</header>
+
+<main class="dashboard">
+
+  <div class="row">
+    <div class="card small-card" id="aqiCard">
+      <h3>Live AQI</h3>
+	<p id="aqiValue">Loading...</p>
+    </div>
+
+    <div class="card small-card">
+      <h3>Health Risk</h3>
+      <p id="riskValue">Calculating...</p>
+    </div>
+  </div>
+
+  <div class="card full-card">
+    <h3>Tomorrow risk Percent</h3>
+    <button onclick="predictFutureAQI()">Predict</button>
+    <p id="futureRisk">Loading ~ --</p>
+  </div>
+
+  <div class="card full-card">
+    <h3>AYUSH Remedies</h3>
+    <ul id="ayushList"></ul>
+  </div>
+
+  <div class="card full-card">
+    <h3>Nearby Clean Air Zones</h3>
+    <div id="map"></div>
+  </div>
+
+  <div class="card full-card">
+    <h3>Risk Analytics</h3>
+    <canvas id="riskChart"></canvas>
+  </div>
+
+  <div class="card full-card chatbot">
+    <h3>VAYU Health Assistant 🤖</h3>
+    <div id="chatBox"></div>
+    <input id="chatInput" placeholder="Ask about air & health...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p>Stay Safe • Breathe Better • VAYU</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
