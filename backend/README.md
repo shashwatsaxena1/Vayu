@@ -1,43 +1,49 @@
-# 🌍 VAYU – AI-Based Air Pollution Prediction & Health Risk System
+# VAYU Backend API
 
-VAYU is a hackathon-ready web application that monitors **Air Quality Index (AQI)**, 
-calculates **personalized health risk**, predicts **future AQI**, and provides 
-**AYUSH-based health suggestions** to help users breathe safer.
+This backend adds auth, profile sync, and exposure tracking for VAYU V2.
 
----
+## Node 24 compatible
 
-## 🚀 Features
+This version is adapted for **Node v24.17.0**. It does **not** use any native database package, so `npm install` does not need Visual Studio C++ Build Tools or Windows SDK.
 
-- 🔐 User Login (Age + Health Condition)
-- 📡 Live AQI Detection (Location-based)
-- ❤️ Personalized Health Risk Score
-- 📊 Risk Analytics Dashboard (Chart.js)
-- 🤖 AI Chatbot for Air & Health Guidance
-- 🔮 Future AQI Prediction Button
-- 🗺️ Nearby Clean Air Zones Map
-- 🌿 AYUSH Remedy Suggestions
+Data is stored locally in:
 
----
+```text
+backend/data/vayu-db.json
+```
 
-## 🧱 Tech Stack
+## What it includes
 
-### Frontend
-- HTML
-- CSS
-- JavaScript
-- Chart.js
-- Leaflet.js (Maps)
+- Email/password signup and login
+- JWT-based protected APIs
+- Local JSON database file
+- Profile sync
+- Exposure history sync
+- Demo Google provider login endpoint
+- Security middleware, CORS, and rate limiting
 
-### Backend
-- Node.js
-- Express.js
-- AQI API (OpenWeather / compatible)
+## Run locally
 
-### Database
-- LocalStorage (Frontend)
-- MongoDB (Optional – future enhancement)
+```bash
+cd backend
+npm install
+copy .env.example .env
+npm run dev
+```
 
----
+Backend runs at:
 
-## 📁 Project Structure
+```text
+http://localhost:5000
+```
 
+Then run frontend from the parent folder:
+
+```bash
+cd ..
+python -m http.server 5173
+```
+
+## Production note
+
+The JSON file database is good for local/demo/small testing. For real public launch, replace it with a hosted database such as PostgreSQL, Supabase, Neon, PlanetScale, or MongoDB Atlas, and replace demo Google login with real Google OAuth.

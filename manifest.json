@@ -1,0 +1,25 @@
+{
+  "name": "VAYU V3 Air Safety Intelligence",
+  "short_name": "VAYU V3",
+  "description": "Production-ready AQI, weather, AYUSH, and preventive health intelligence platform.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fbf4",
+  "theme_color": "#dff3dc",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/vayu-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "scope": "./",
+  "categories": [
+    "health",
+    "weather",
+    "productivity"
+  ],
+  "lang": "en"
+}

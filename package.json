@@ -1,0 +1,34 @@
+{
+  "name": "vayu-v3-production",
+  "version": "3.0.0",
+  "description": "VAYU V3 production-ready PWA with AQI, weather intelligence, notifications, AYUSH guidance, exposure tracking, and backend sync.",
+  "scripts": {
+    "start": "python -m http.server 5173",
+    "serve": "python -m http.server 5173",
+    "test:syntax": "node --check app.js",
+    "build": "echo Static PWA build ready. Deploy this folder to Netlify, Vercel, Firebase Hosting, or any HTTPS static host.",
+    "backend:install": "cd backend && npm install",
+    "backend:dev": "cd backend && npm run dev",
+    "backend:start": "cd backend && npm start",
+    "dev:full": "echo \"Run frontend and backend in two terminals: npm run serve and npm run backend:dev\"",
+    "dev": "npm run serve",
+    "frontend": "python -m http.server 5173",
+    "install:backend": "cd backend && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "start:backend": "cd backend && npm start",
+    "check": "node --check app.js && cd backend && node --check src/server.js",
+    "deploy:notes": "echo Deploy frontend to Netlify/Vercel and backend to Render/Railway with HTTPS and environment variables."
+  },
+  "keywords": [
+    "vayu",
+    "aqi",
+    "weather",
+    "health",
+    "pwa",
+    "exposure-tracker",
+    "preventive-health"
+  ],
+  "author": "VAYU Project",
+  "license": "MIT",
+  "private": true
+}

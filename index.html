@@ -1,42 +1,857 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>VAYU | Login</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#dff3dc" />
+  <meta name="description" content="VAYU is a production-ready PWA for local weather, air quality, exposure tracking, and preventive health guidance." />
+  <meta name="application-name" content="VAYU" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="VAYU" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="robots" content="index,follow" />
+  <meta property="og:title" content="VAYU — Weather, AQI & Preventive Health" />
+  <meta property="og:description" content="Local AQI, weather intelligence, exposure tracking, and personalized preventive safety guidance." />
+  <meta property="og:type" content="website" />
+  <title>VAYU — Weather, Air Quality & Health Assistant</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/vayu-logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
-<body class="login-body">
-
-<header class="login-header">
-  <h1>VAYU</h1>
-  <p>AI-Powered Air Health Monitor</p>
-</header>
-
-<main class="login-main">
-  <div class="login-card">
-
-    <h2>Check Your Air Health</h2>
-
-    <input type="text" id="name" placeholder="Enter your name">
-    <input type="number" id="age" placeholder="Enter your age">
-
-    <select id="problem">
-      <option>No Breathing Problem</option>
-      <option>Asthma</option>
-      <option>Bronchitis</option>
-      <option>COPD</option>
-    </select>
-
-    <button onclick="login()">CHECK</button>
-
+<body>
+  <div id="splashScreen" class="splash-screen" aria-label="Loading VAYU">
+    <div class="splash-card">
+      <img src="assets/vayu-logo.svg" alt="VAYU logo" />
+      <h1>VAYU</h1>
+      <p>Weather • AQI • Preventive Health</p>
+      <span class="splash-loader"></span>
+    </div>
   </div>
-</main>
+  <div id="weatherLayer" class="weather-layer" aria-hidden="true"></div>
 
-<footer class="login-footer">
-  <p>© VAYU Hackathon Project</p>
-</footer>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="assets/vayu-logo-horizontal.svg" alt="VAYU logo" class="brand-logo brand-logo-light" />
+        <img src="assets/vayu-logo-horizontal-dark.svg" alt="VAYU logo" class="brand-logo brand-logo-dark" />
+        <p>Weather • AQI • Preventive Health</p>
+      </div>
 
-<script src="script.js"></script>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-page="dashboard">🏠 <span>Dashboard</span></button>
+        <button class="nav-item" data-page="aqi">🛰️ <span>AQI Details</span></button>
+        <button class="nav-item" data-page="weather">🌦️ <span>Weather</span></button>
+        <button class="nav-item" data-page="health">🩺 <span>Health Advice</span></button>
+        <button class="nav-item" data-page="daily">🗓️ <span>Daily Plan</span></button>
+        <button class="nav-item" data-page="report">📋 <span>Health Report</span></button>
+        <button class="nav-item" data-page="ayush">🌿 <span>AYUSH Care</span></button>
+        <button class="nav-item" data-page="exposure">📍 <span>Exposure Tracker</span></button>
+        <button class="nav-item" data-page="alerts">⚠️ <span>Alerts</span></button>
+        <button class="nav-item" data-page="safety">🏥 <span>Hospitals & Routes</span></button>
+        <button class="nav-item" data-page="profile">👤 <span>Profile</span></button>
+        <button class="nav-item" data-page="settings">⚙️ <span>Settings</span></button>
+        <button class="nav-item" data-page="about">🌍 <span>About VAYU</span></button>
+      </nav>
+
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menuButton" aria-label="Open menu">☰</button>
+        <div class="topbar-title">
+          <img src="assets/vayu-logo.svg" alt="VAYU" class="topbar-logo" />
+          <span id="timeIcon" class="time-icon">☀️</span>
+          <div>
+            <h2 id="pageTitle">Dashboard</h2>
+            <p id="pageSubtitle">Your air quality and preventive health overview</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="city-search-wrap">
+            <input id="citySelect" class="select-pill city-search-input" list="citySuggestions" value="Delhi" aria-label="Search city" placeholder="Search city..." autocomplete="off" />
+            <datalist id="citySuggestions"></datalist>
+          </div>
+          <button class="toggle-pill" id="easyModeToggle" type="button">Easy Mode: Off</button>
+          <button class="toggle-pill" id="themeToggle" type="button">Theme: Auto</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="page active-page">
+        <div class="hero-card">
+            <article class="hero-weather-scene" id="heroWeatherScene" aria-label="Animated local weather scene">
+              <div class="scene-info">
+                <div class="scene-location"><span>📍</span><strong id="sceneLocation">Current Area</strong></div>
+                <div class="scene-main-temp" id="sceneTemp">31°</div>
+                <div class="scene-condition" id="sceneCondition">Haze</div>
+                <div class="scene-range"><span id="sceneHighLow">↑ 34° / ↓ 27°</span><span id="sceneFeelsLike">Feels like 35°</span></div>
+              </div>
+              <div class="scene-stage" id="sceneStage">
+                <div class="scene-celestial" id="sceneCelestial"></div>
+                <div class="scene-cloud scene-cloud-one"></div>
+                <div class="scene-cloud scene-cloud-two"></div>
+                <div class="scene-haze"></div>
+                <div class="scene-rain" id="sceneRain"></div>
+                <div class="scene-snow" id="sceneSnow"></div>
+                <div class="scene-lightning" id="sceneLightning"></div>
+                <div class="scene-lake"></div>
+                <div class="scene-hill scene-hill-back"></div>
+                <div class="scene-hill scene-hill-front"></div>
+                <div class="scene-grass scene-grass-left"></div>
+                <div class="scene-grass scene-grass-right"></div>
+                <div class="scene-character" id="sceneCharacter">
+                  <div class="character-umbrella"></div>
+                  <div class="character-head"></div>
+                  <div class="character-hair"></div>
+                  <div class="character-body"></div>
+                  <div class="character-arm"></div>
+                  <div class="character-leg character-leg-left"></div>
+                  <div class="character-leg character-leg-right"></div>
+                </div>
+              </div>
+            </article>
+          <div class="hero-content">
+            <div class="hero-brand-lockup"><img src="assets/vayu-logo.svg" alt="VAYU" /><span>VAYU Live Intelligence</span></div>
+            <h3 id="heroHeadline">Delhi air is Unhealthy today</h3>
+            <p id="heroAdvice">Avoid heavy outdoor activity and use a mask if you need to travel.</p>
+            <div class="hero-actions">
+              <button class="secondary-btn" data-page-target="health">View Health Plan</button>
+            </div>
+          </div>
+          <div class="hero-aqi-panel">
+            <div class="aqi-orb" id="aqiOrb" aria-label="Animated AQI meter">
+              <svg class="aqi-ring" viewBox="0 0 240 240" aria-hidden="true">
+                <circle class="aqi-ring-bg" cx="120" cy="120" r="104"></circle>
+                <circle class="aqi-ring-progress" id="aqiProgressCircle" cx="120" cy="120" r="104"></circle>
+              </svg>
+              <div class="aqi-orb-content">
+                <span>AQI</span>
+                <strong id="aqiValue">0</strong>
+                <em id="aqiStatus">Unhealthy</em>
+              </div>
+            </div>
+
+            <div class="temp-orb" id="tempOrb" aria-label="Temperature meter">
+              <svg class="temp-ring" viewBox="0 0 220 220" aria-hidden="true">
+                <circle class="temp-ring-bg" cx="110" cy="110" r="92"></circle>
+                <circle class="temp-ring-progress" id="tempProgressCircle" cx="110" cy="110" r="92"></circle>
+              </svg>
+              <div class="temp-orb-content">
+                <span>Temperature</span>
+                <strong id="heroTemp">31°</strong>
+                <em id="heroTempStatus">Warm</em>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid cards-grid">
+          <article class="card metric-card">
+            <span class="card-icon">🫁</span>
+            <p>Health Risk</p>
+            <h3 id="riskLevel">High</h3>
+            <div class="risk-meter"><span id="riskFill"></span></div>
+            <small id="riskScoreText">Risk Score: 72/100</small>
+          </article>
+
+          <article class="card metric-card">
+            <span class="card-icon">🌡️</span>
+            <p>Temperature</p>
+            <h3 id="temperature">31°C</h3>
+            <small id="weatherSummary">Hazy with low wind</small>
+          </article>
+
+          <article class="card metric-card">
+            <span class="card-icon">💨</span>
+            <p>Main Pollutant</p>
+            <h3 id="mainPollutant">PM2.5</h3>
+            <small id="pollutantHint">Fine particles can enter lungs.</small>
+          </article>
+
+          <article class="card metric-card">
+            <span class="card-icon">⚠️</span>
+            <p>VAYU Alert</p>
+            <h3 id="alertTitle">High PM2.5</h3>
+            <small id="alertText">Sensitive users should reduce outdoor exposure.</small>
+          </article>
+        </div>
+
+        <div class="dashboard-stack">
+          <div class="dashboard-insight-row">
+            <article class="card wide-card pollutant-breakdown-card">
+              <div class="card-header">
+                <div>
+                  <span class="eyebrow">Pollutant Breakdown</span>
+                  <h3>Air quality components</h3>
+                </div>
+                <span id="lastUpdated" class="chip">Updated now</span>
+              </div>
+              <div id="pollutantBars" class="pollutant-bars"></div>
+            </article>
+
+            <article class="card insight-carousel-card" aria-label="Daily outdoor condition slideshow">
+              <div class="card-header compact-header">
+                <div>
+                  <span class="eyebrow">Live Condition Slides</span>
+                  <h3>Outdoor guidance</h3>
+                </div>
+                <span class="chip">Auto</span>
+              </div>
+              <div id="dashboardInsightCarousel" class="insight-carousel-track"></div>
+            </article>
+          </div>
+
+          <article class="card advice-card horizontal-safety-card">
+            <div class="safety-plan-left">
+              <span class="eyebrow">Today’s Safety Plan</span>
+              <h3 id="safetyPlanTitle">Protect your lungs today</h3>
+              <ul id="safetyPlanList"></ul>
+            </div>
+            <div class="safety-plan-right dashboard-ayush-remedies">
+              <div class="mini-section-head"><span>🌿</span><strong>AYUSH Remedies</strong></div>
+              <div id="dashboardAyushRemedies" class="remedy-chip-list"></div>
+            </div>
+            <div class="notification-permission-card" id="notificationPermissionCard">
+              <div>
+                <strong>Device safety alerts</strong>
+                <p id="notificationStatusText">Enable alerts for sudden AQI, rain, storm, heat, and wind warnings.</p>
+              </div>
+              <button class="secondary-btn" id="notificationButton" type="button">Enable Alerts</button>
+            </div>
+          </article>
+
+          <article class="card snow-travel-card" id="snowTravelSafetyCard" hidden>
+            <div class="snow-travel-icon">❄️</div>
+            <div>
+              <span class="eyebrow">Snow Travel Safety</span>
+              <h3 id="snowTravelTitle">Winter movement caution</h3>
+              <p id="snowTravelText">Snow conditions need extra travel care.</p>
+            </div>
+            <div id="snowTravelTips" class="snow-travel-tips"></div>
+          </article>
+
+          <article class="card wide-card remedy-monitor-card dashboard-remedy-card">
+            <div class="card-header">
+              <div>
+                <span class="eyebrow">📋 Remedy Monitor</span>
+                <h3>Today’s preventive wellness actions</h3>
+              </div>
+              <span id="dashboardRemedyChip" class="chip">0% complete</span>
+            </div>
+            <div id="dashboardRemedyMonitor" class="remedy-monitor-list compact"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="aqi" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Air Quality Intelligence</span>
+          <h3>Understand what you are breathing</h3>
+          <p>VAYU converts pollutant numbers into simple health-aware meaning.</p>
+        </div>
+        <div id="aqiDetailCards" class="grid feature-grid"></div>
+      </section>
+
+      <section id="weather" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Weather + Air Safety</span>
+          <h3>VAYU works like a weather app with AQI and health at the center</h3>
+          <p>Track weather conditions, see a familiar forecast view, and understand how climate affects air quality and personal safety.</p>
+        </div>
+
+        <article class="card wide-card weather-explorer-card">
+          <div class="weather-explorer-head">
+            <div>
+              <span class="eyebrow">Live Weather View</span>
+              <h3>Today’s forecast and next 7 days</h3>
+              <p class="weather-explorer-copy">A weather-style experience with climate context, while still keeping AQI and health safety as the main focus.</p>
+            </div>
+            <div class="segmented weather-tabs" id="weatherTabs">
+              <button class="weather-tab active" data-weather-metric="temperature" type="button">Temperature</button>
+              <button class="weather-tab" data-weather-metric="precipitation" type="button">Precipitation</button>
+              <button class="weather-tab" data-weather-metric="wind" type="button">Wind</button>
+            </div>
+          </div>
+
+          <div class="weather-visual-grid">
+            <div class="weather-stat-stack">
+              <div class="weather-now-pill"><span id="weatherNowCity">Delhi</span> • <span id="weatherNowCondition">Hazy</span></div>
+              <div class="weather-main-reading">
+                <strong id="weatherMainValue">31°</strong>
+                <span id="weatherMainUnit">C</span>
+              </div>
+              <p id="weatherMetricSummary" class="body-text">Warm and hazy conditions through the day. Keep an eye on AQI before outdoor plans.</p>
+              <div class="weather-side-note">
+                <strong id="weatherSafetyLabel">Air safety note</strong>
+                <span id="weatherSafetyNote">Low wind can trap pollutants, so pollution may feel stronger today.</span>
+              </div>
+            </div>
+
+            <div class="weather-chart-panel">
+              <div class="weather-chart-meta">
+                <div>
+                  <span class="eyebrow">Hourly view</span>
+                  <h4 id="weatherMetricTitle">Temperature trend</h4>
+                </div>
+                <div class="chart-control-stack">
+                  <span id="weatherMetricPeak" class="chip">Peak 40°C</span>
+                  <div class="segmented chart-view-tabs" id="chartViewTabs" aria-label="Weather chart view">
+                    <button class="chart-view-tab active" data-weather-view="hourly" type="button">Hourly</button>
+                    <button class="chart-view-tab" data-weather-view="daily" type="button">Daily</button>
+                  </div>
+                </div>
+              </div>
+              <svg id="weatherLineChart" class="weather-line-chart" viewBox="0 0 720 220" preserveAspectRatio="none" aria-label="Weather chart">
+                <defs>
+                  <linearGradient id="weatherAreaFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(234, 191, 45, 0.42)"></stop>
+                    <stop offset="100%" stop-color="rgba(234, 191, 45, 0.04)"></stop>
+                  </linearGradient>
+                </defs>
+                <g id="weatherGridGroup"></g>
+                <path id="weatherAreaPath" class="weather-area-path"></path>
+                <path id="weatherLinePath" class="weather-line-path"></path>
+                <g id="weatherPointGroup"></g>
+              </svg>
+              <div id="weatherChartLabels" class="weather-chart-labels"></div>
+            </div>
+          </div>
+
+          <div id="dailyForecastRow" class="daily-forecast-row"></div>
+        </article>
+
+        <div class="grid cards-grid">
+          <article class="card metric-card"><span class="card-icon">🌡️</span><p>Temperature</p><h3 id="weatherTemp">31°C</h3><small id="weatherTempFeelsLike">Feels like 31°C</small></article>
+          <article class="card metric-card"><span class="card-icon">💧</span><p>Humidity</p><h3 id="weatherHumidity">61%</h3><small>High humidity may worsen discomfort.</small></article>
+          <article class="card metric-card"><span class="card-icon">🌬️</span><p>Wind Speed</p><h3 id="weatherWind">7 km/h</h3><small>Low wind can trap pollutants.</small></article>
+          <article class="card metric-card"><span class="card-icon">☁️</span><p>Condition</p><h3 id="weatherCondition">Hazy</h3><small id="weatherAnimationText">Subtle haze effect active.</small></article>
+        </div>
+        <article class="card wide-card forecast-card">
+          <div class="card-header">
+            <div><span class="eyebrow">AQI Forecast</span><h3>Next 5-hour AQI trend</h3><p id="forecastSummaryText" class="forecast-summary-text">Live forecast intelligence loading...</p></div>
+            <span id="forecastTrendChip" class="chip">Weather-aware air quality</span>
+          </div>
+          <div id="forecastInsightCards" class="forecast-insight-row"></div>
+          <div class="forecast-chart-wrap">
+            <svg id="forecastChart" class="forecast-chart" viewBox="0 0 700 230" preserveAspectRatio="none" aria-label="AQI forecast bar chart">
+              <defs>
+                <linearGradient id="forecastAreaFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(113, 166, 106, 0.34)"></stop>
+                  <stop offset="100%" stop-color="rgba(113, 166, 106, 0.02)"></stop>
+                </linearGradient>
+              </defs>
+              <g id="forecastGrid"></g>
+              <path id="forecastAreaPath" class="forecast-area-path"></path>
+              <path id="forecastLinePath" class="forecast-line-path"></path>
+              <g id="forecastPointGroup"></g>
+            </svg>
+            <div id="forecastLabels" class="forecast-labels"></div>
+          </div>
+        </article>
+      </section>
+
+
+      <section id="daily" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Daily Safety Plan</span>
+          <h3>Your personalized pollution and weather routine</h3>
+          <p>VAYU combines AQI, weather, live location, and your health profile to suggest safer actions for today.</p>
+        </div>
+
+        <div class="grid daily-plan-layout">
+          <article class="card daily-summary-card">
+            <span class="eyebrow">Today’s Plan</span>
+            <h3 id="dailyPlanSummary">Loading your safety plan...</h3>
+            <p id="dailyPlanReason" class="body-text">VAYU is checking your AQI, weather, and profile.</p>
+            <div class="daily-plan-pills">
+              <span id="dailyBestTime">Best outdoor time: Checking</span>
+              <span id="dailyMaskAdvice">Mask: Checking</span>
+              <span id="dailyWindowAdvice">Windows: Checking</span>
+            </div>
+          </article>
+
+          <article class="card daily-checklist-card">
+            <span class="eyebrow">Safety Checklist</span>
+            <h3>Before you go outside</h3>
+            <div id="dailyChecklist" class="daily-checklist"></div>
+          </article>
+        </div>
+
+        <article class="card wide-card daily-timeline-card">
+          <div class="card-header">
+            <div>
+              <span class="eyebrow">Day Plan</span>
+              <h3>Morning to night guidance</h3>
+            </div>
+            <span id="dailyPlanRiskChip" class="chip">Risk checking</span>
+          </div>
+          <div id="dailyPlanTimeline" class="daily-plan-timeline"></div>
+        </article>
+      </section>
+
+      <section id="health" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Preventive Healthcare</span>
+          <h3>Personalized safety guidance</h3>
+          <p>This is preventive guidance, not a medical diagnosis. For severe symptoms, contact a healthcare professional.</p>
+        </div>
+        <div class="grid dashboard-lower">
+          <article class="card wide-card">
+            <div class="card-header">
+              <div><span class="eyebrow">Your Risk</span><h3 id="healthRiskHeading">High Risk</h3></div>
+              <span id="healthRiskScore" class="chip">72/100</span>
+            </div>
+            <p id="healthRiskReason" class="body-text"></p>
+            <div class="risk-meter large"><span id="healthRiskFill"></span></div>
+          </article>
+          <article class="card advice-card">
+            <span class="eyebrow">Recommended Actions</span>
+            <ul id="healthAdviceList"></ul>
+          </article>
+        </div>
+        <article class="card wide-card ayush-card">
+          <span class="eyebrow">AYUSH Lite</span>
+          <h3>Simple preventive wellness tips</h3>
+          <div class="ayush-grid">
+            <div><strong>Pranayama</strong><p>Try gentle breathing only in clean indoor air. Avoid intense breathing exercises outdoors during high AQI.</p></div>
+            <div><strong>Hydration</strong><p>Drink enough water and avoid smoke exposure. Keep indoor air clean.</p></div>
+            <div><strong>Yoga</strong><p>Prefer light stretching indoors when pollution is high. Avoid outdoor workouts.</p></div>
+          </div>
+        </article>
+      </section>
+
+
+      <section id="report" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Health Report Card</span>
+          <h3>Your AQI, weather, and profile risk report</h3>
+          <p>VAYU converts today’s pollution and climate conditions into a simple preventive health report. This is guidance, not a medical diagnosis.</p>
+        </div>
+
+        <div class="grid report-hero-grid">
+          <article class="card report-score-card">
+            <span class="eyebrow">Overall Risk</span>
+            <div class="report-score-ring" id="reportScoreRing">
+              <strong id="reportScoreValue">72</strong>
+              <span id="reportScoreLevel">High</span>
+            </div>
+            <p id="reportSummaryText" class="body-text">VAYU is preparing your report.</p>
+          </article>
+
+          <article class="card report-reasons-card">
+            <div class="card-header">
+              <div>
+                <span class="eyebrow">Main Reasons</span>
+                <h3>Why this risk level?</h3>
+              </div>
+              <span id="reportLocationChip" class="chip">Location</span>
+            </div>
+            <div id="reportReasonList" class="report-reason-list"></div>
+          </article>
+        </div>
+
+        <article class="card wide-card report-grid-card">
+          <div class="card-header">
+            <div>
+              <span class="eyebrow">Risk Breakdown</span>
+              <h3>Environmental and personal safety categories</h3>
+            </div>
+            <span id="reportUpdatedChip" class="chip">Updated now</span>
+          </div>
+          <div id="healthReportGrid" class="health-report-grid"></div>
+        </article>
+
+        <article class="card wide-card report-actions-card">
+          <div class="card-header">
+            <div>
+              <span class="eyebrow">Action Summary</span>
+              <h3>What VAYU recommends today</h3>
+            </div>
+            <button class="secondary-btn" data-page-target="daily" type="button">Open Daily Plan</button>
+          </div>
+          <div id="reportActionList" class="report-action-list"></div>
+        </article>
+      </section>
+
+      <section id="ayush" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">AYUSH Preventive Care</span>
+          <h3>Weather-aware yoga, pranayama, and wellness routine</h3>
+          <p>VAYU gives safe preventive AYUSH-style guidance based on AQI, weather, and sensitivity. Avoid intense breathing practices outdoors when pollution is high.</p>
+        </div>
+
+        <div class="grid ayush-v2-layout">
+          <article class="card ayush-hero-card">
+            <span class="eyebrow">Today’s AYUSH Mode</span>
+            <h3 id="ayushModeTitle">Indoor respiratory care</h3>
+            <p id="ayushModeText" class="body-text">VAYU is preparing your wellness routine.</p>
+            <div id="ayushQuickChips" class="ayush-chip-row"></div>
+          </article>
+
+          <article class="card ayush-caution-card">
+            <span class="eyebrow">Safety First</span>
+            <h3 id="ayushCautionTitle">Practice safely</h3>
+            <p id="ayushCautionText" class="body-text">This is preventive wellness guidance. Stop if you feel discomfort.</p>
+          </article>
+        </div>
+
+        <article class="card wide-card ayush-routine-card">
+          <div class="card-header">
+            <div>
+              <span class="eyebrow">Morning + Evening Routine</span>
+              <h3>Simple routine for today</h3>
+            </div>
+            <span id="ayushRiskChip" class="chip">Risk checking</span>
+          </div>
+          <div id="ayushRoutineGrid" class="ayush-routine-grid"></div>
+        </article>
+
+        <div class="grid ayush-detail-grid">
+          <article class="card">
+            <span class="eyebrow">Recommended Practices</span>
+            <div id="ayushPracticeList" class="ayush-list"></div>
+          </article>
+          <article class="card">
+            <span class="eyebrow">Avoid Today</span>
+            <div id="ayushAvoidList" class="ayush-list danger-list"></div>
+          </article>
+          <article class="card">
+            <span class="eyebrow">Seasonal Wellness</span>
+            <div id="ayushWellnessList" class="ayush-list"></div>
+          </article>
+        </div>
+
+        <article class="card wide-card remedy-monitor-card">
+          <div class="card-header">
+            <div>
+              <span class="eyebrow">Remedy Monitoring</span>
+              <h3>Track today’s preventive wellness actions</h3>
+            </div>
+            <span id="remedyMonitorChip" class="chip">0% complete</span>
+          </div>
+          <p id="remedyMonitorSummary" class="body-text">VAYU is preparing your remedy checklist.</p>
+          <div id="ayushRemedyMonitor" class="remedy-monitor-list"></div>
+        </article>
+      </section>
+
+
+      <section id="exposure" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Exposure Tracker</span>
+          <h3>Track your daily pollution exposure</h3>
+          <p>Log travel, outdoor exercise, mask use, dust/smoke exposure, and breathing discomfort. VAYU uses this locally to improve tomorrow’s preventive guidance.</p>
+        </div>
+
+        <div class="grid exposure-hero-grid">
+          <article class="card exposure-score-card">
+            <span class="eyebrow">Today’s Exposure</span>
+            <div class="exposure-score-ring" id="exposureScoreRing">
+              <strong id="exposureScoreValue">0</strong>
+              <span id="exposureScoreLabel">Not logged</span>
+            </div>
+            <p id="exposureSummaryText" class="body-text">Log your day to get exposure-aware suggestions.</p>
+          </article>
+
+          <article class="card exposure-suggestion-card">
+            <div class="card-header">
+              <div>
+                <span class="eyebrow">Tomorrow Suggestion</span>
+                <h3>VAYU exposure guidance</h3>
+              </div>
+              <span id="exposureUpdatedChip" class="chip">No log yet</span>
+            </div>
+            <div id="exposureSuggestionList" class="exposure-suggestion-list"></div>
+          </article>
+        </div>
+
+        <div class="grid exposure-layout">
+          <form id="exposureForm" class="card exposure-form">
+            <span class="eyebrow">Log Today</span>
+            <h3>What happened today?</h3>
+            <label>Outdoor duration
+              <select id="exposureDuration">
+                <option>None</option>
+                <option>Less than 30 min</option>
+                <option>30–60 min</option>
+                <option>1–2 hours</option>
+                <option>3+ hours</option>
+              </select>
+            </label>
+            <div class="exposure-check-grid">
+              <label><input id="exposureIndoors" type="checkbox" /> Mostly stayed indoors</label>
+              <label><input id="exposureTravel" type="checkbox" /> Travelled outside</label>
+              <label><input id="exposureExercise" type="checkbox" /> Outdoor exercise</label>
+              <label><input id="exposureMask" type="checkbox" /> Used mask</label>
+              <label><input id="exposureSmoke" type="checkbox" /> Dust/smoke exposure</label>
+              <label><input id="exposureDiscomfort" type="checkbox" /> Breathing discomfort</label>
+            </div>
+            <label>Notes
+              <textarea id="exposureNotes" rows="3" placeholder="Example: travelled to college, dusty road, wore mask..."></textarea>
+            </label>
+            <div class="form-actions">
+              <button class="primary-btn" id="exposureSaveButton" type="submit">Save Today’s Log</button>
+              <button class="secondary-btn" id="exposureClearButton" type="button">Clear History</button>
+            </div>
+          </form>
+
+          <article class="card exposure-history-card">
+            <div class="card-header">
+              <div>
+                <span class="eyebrow">Local History</span>
+                <h3>Recent exposure logs</h3>
+              </div>
+              <span id="exposureHistoryChip" class="chip">0 logs</span>
+            </div>
+            <div id="exposureHistoryList" class="exposure-history-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="alerts" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Early Warnings</span>
+          <h3>Current safety alerts</h3>
+          <p>VAYU creates simple alerts from AQI, weather, and health profile.</p>
+        </div>
+        <div id="alertsList" class="alerts-list"></div>
+      </section>
+
+
+
+      <section id="safety" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">V1.1 Safety Module</span>
+          <h3>Hospitals and safer route support</h3>
+          <p>Find nearby hospital searches quickly and plan outdoor movement with AQI-aware precautions.</p>
+        </div>
+
+        <div class="grid dashboard-lower">
+          <article class="card wide-card safety-map-card">
+            <div class="card-header">
+              <div>
+                <span class="eyebrow">Emergency Helper</span>
+                <h3>Hospital locator</h3>
+              </div>
+              <span id="safetyCityChip" class="chip">Delhi</span>
+            </div>
+            <p class="body-text">Open a live map search for hospitals near your selected city. For severe symptoms, call local emergency services immediately.</p>
+            <div class="safety-actions">
+              <a id="hospitalSearchLink" class="primary-btn link-btn" target="_blank" rel="noreferrer">Open Nearby Hospitals</a>
+              <a id="pharmacySearchLink" class="secondary-btn link-btn" target="_blank" rel="noreferrer">Find Pharmacy</a>
+            </div>
+            <div id="hospitalCards" class="hospital-cards"></div>
+          </article>
+
+          <article class="card advice-card route-card">
+            <span class="eyebrow">Safe Movement</span>
+            <h3>AQI-aware route planner</h3>
+            <label>Start location<input id="routeStart" type="text" placeholder="Example: Home" /></label>
+            <label>Destination<input id="routeDestination" type="text" placeholder="Example: College" /></label>
+            <button class="primary-btn" id="openRouteButton" type="button">Open Safer Route</button>
+            <p id="routeAdvice" class="body-text">VAYU will suggest precautions based on AQI before opening map directions.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="assistant" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">VAYU AI</span>
+          <h3>Ask your air quality assistant</h3>
+          <p>Ask about going outside, masks, PM2.5, health risk, weather, or safety actions.</p>
+        </div>
+        <div class="assistant-page-card card">
+          <div id="assistantPageMessages" class="chat-messages large-chat"></div>
+          <form id="assistantPageForm" class="chat-input-row">
+            <input id="assistantPageInput" type="text" placeholder="Ask: Can I go for a walk today?" autocomplete="off" />
+            <button type="submit">Send</button>
+          </form>
+        </div>
+      </section>
+
+
+      <section id="auth" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Account Access</span>
+          <h3>Login or create your VAYU account</h3>
+          <p>For this V1 demo, account details are saved locally in your browser. Backend email OTP authentication can be added in the next production version.</p>
+        </div>
+
+        <div class="auth-status card" id="authStatusCard">
+          <div>
+            <span class="eyebrow">Session</span>
+            <h3 id="authStatusTitle">You are not logged in</h3>
+            <p id="authStatusText">Login or sign up to personalize VAYU guidance.</p>
+          </div>
+          <button class="secondary-btn" id="logoutButton" type="button">Logout</button>
+        </div>
+
+        <div class="auth-brand-panel card">
+          <img src="assets/vayu-logo-horizontal.svg" alt="VAYU logo" class="auth-brand-logo brand-logo-light" />
+          <img src="assets/vayu-logo-horizontal-dark.svg" alt="VAYU logo" class="auth-brand-logo brand-logo-dark" />
+          <div>
+            <span class="eyebrow">Secure Access</span>
+            <h3>Your weather, AQI and health profile in one place</h3>
+            <p>V1 uses local demo login. The next backend version can connect OTP email verification, protected profiles, and cloud sync.</p>
+          </div>
+        </div>
+
+        <div class="auth-provider-row card">
+          <div>
+            <span class="eyebrow">Optional Quick Access</span>
+            <h3>Continue with your existing account</h3>
+            <p>Demo-only Google/Microsoft login buttons. Production OAuth can be connected later.</p>
+          </div>
+          <div class="auth-provider-actions">
+            <button class="secondary-btn provider-btn" id="googleLoginButton" type="button">G Continue with Google</button>
+            <button class="secondary-btn provider-btn" id="microsoftLoginButton" type="button">▦ Continue with Microsoft</button>
+          </div>
+        </div>
+
+        <div class="grid auth-grid">
+          <form id="loginForm" class="card auth-card">
+            <span class="eyebrow">Login</span>
+            <h3>Welcome back</h3>
+            <label>Email<input id="loginEmail" type="email" placeholder="you@example.com" required /></label>
+            <label>Password<input id="loginPassword" type="password" placeholder="Enter password" required /></label>
+            <button class="primary-btn" type="submit">Login</button>
+          </form>
+
+          <form id="signupForm" class="card auth-card">
+            <span class="eyebrow">Sign Up</span>
+            <h3>Create account</h3>
+            <label>Name<input id="signupName" type="text" placeholder="Your name" required /></label>
+            <label>Email<input id="signupEmail" type="email" placeholder="you@example.com" required /></label>
+            <label>Password<input id="signupPassword" type="password" placeholder="Create password" required /></label>
+            <button class="primary-btn" type="submit">Create Account</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="profile" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">User Profile</span>
+          <h3>Personalize your health guidance</h3>
+          <p>VAYU uses this only for preventive risk suggestions in this demo.</p>
+        </div>
+        <article class="card profile-brand-card">
+          <div class="profile-brand-main">
+            <img src="assets/vayu-logo.svg" alt="VAYU" />
+            <div>
+              <span class="eyebrow">VAYU Health Identity</span>
+              <h3 id="profilePreviewName">Guest User</h3>
+              <p id="profilePreviewText">Save your profile to unlock more personal AQI and weather safety guidance.</p>
+            </div>
+          </div>
+          <div class="profile-brand-chips">
+            <span id="profilePreviewAge">Adult</span>
+            <span id="profilePreviewCondition">No condition</span>
+            <span id="profilePreviewActivity">Medium activity</span>
+          </div>
+        </article>
+        <form id="profileForm" class="card profile-form">
+          <label>Name<input id="profileName" type="text" placeholder="Your name" /></label>
+          <label>Age Group<select id="profileAge"><option>Adult</option><option>Child</option><option>Senior</option></select></label>
+          <label>Health Condition<select id="profileCondition"><option>None</option><option>Asthma</option><option>Heart issue</option><option>Breathing sensitivity</option><option>Allergy sensitivity</option></select></label>
+          <label>Daily Routine<select id="profileRoutine"><option>Student</option><option>Office worker</option><option>Runner</option><option>Cyclist</option><option>Outdoor worker</option><option>Mostly home</option></select></label>
+          <label>Outdoor Activity<select id="profileActivity"><option>Low</option><option>Medium</option><option>High</option></select></label>
+          <label>Daily Exposure<select id="profileExposure"><option>Low</option><option>Medium</option><option>High</option></select></label>
+          <label>Exposure Duration<select id="profileDuration"><option>Less than 30 min</option><option>30–60 min</option><option>1–2 hours</option><option>3+ hours</option></select></label>
+          <label>Mask Usage<select id="profileMask"><option>Yes</option><option>Sometimes</option><option>No</option></select></label>
+          <label>Indoor Air Purifier<select id="profilePurifier"><option>No</option><option>Yes</option></select></label>
+          <label>Sensitivity Level<select id="profileSensitivity"><option>Normal</option><option>Sensitive</option><option>Highly Sensitive</option></select></label>
+          <label>Preferred Language<select id="profileLanguage"><option>English</option><option>Hindi</option><option>Hinglish</option></select></label>
+          <div class="profile-form-actions">
+            <button class="primary-btn" id="profileSubmitButton" type="submit">Save Profile</button>
+            <p id="profileSaveNote" class="profile-save-note">Your profile is stored only in this browser for personalized preventive guidance.</p>
+          </div>
+        </form>
+      </section>
+
+      <section id="settings" class="page">
+        <div class="section-intro">
+          <span class="eyebrow">Experience Controls</span>
+          <h3>Theme, accessibility, and animations</h3>
+          <p>Keep the interface comfortable for normal users and senior citizens.</p>
+        </div>
+        <div class="grid feature-grid">
+          <article class="card settings-card">
+            <h3>Accessibility</h3>
+            <p>Easy Mode increases font size, simplifies spacing, and improves readability.</p>
+            <button class="primary-btn" id="settingsEasyToggle" type="button">Toggle Easy Mode</button>
+          </article>
+          <article class="card settings-card">
+            <h3>Theme</h3>
+            <p>Light mode uses white, light green, dusty tones. Dark mode uses matte black and grey.</p>
+            <div class="segmented">
+              <button data-theme-choice="light">Light</button>
+              <button data-theme-choice="dark">Dark</button>
+              <button data-theme-choice="auto">Auto</button>
+            </div>
+          </article>
+          <article class="card settings-card">
+            <h3>Weather Animations</h3>
+            <p>Subtle screen effects change with weather: wind, rain, haze, sun, and clouds.</p>
+            <button class="primary-btn" id="animationToggle" type="button">Animations: On</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="about" class="page">
+        <div class="section-intro about-hero-intro">
+          <span class="eyebrow">About VAYU</span>
+          <h3>VAYU V3</h3>
+          <p>VAYU is a production-ready air quality, weather, preventive health, AYUSH wellness, and AI safety assistant built to help people make safer daily decisions.</p>
+        </div>
+        <article class="card wide-card about-card professional-about-card">
+          <h3>What VAYU V3 provides</h3>
+          <p>VAYU combines live AQI, local weather, pollutant breakdowns, health-risk scoring, daily safety planning, remedy monitoring, device alerts, and an AI assistant into one clean PWA experience.</p>
+          <div class="about-feature-list">
+            <div><strong>Live Intelligence</strong><span>Location-based AQI, temperature, humidity, wind, rain, and forecast insights.</span></div>
+            <div><strong>Health Safety</strong><span>Personal risk score, mask advice, outdoor activity guidance, and exposure tracking.</span></div>
+            <div><strong>AYUSH Wellness</strong><span>Preventive wellness routines, safe remedies, and daily progress monitoring.</span></div>
+            <div><strong>Smart Assistant</strong><span>Context-aware chatbot for AQI, weather, remedies, travel, and safety questions.</span></div>
+            <div><strong>Production Base</strong><span>PWA support, backend login, JSON database, deployment configs, privacy and security docs.</span></div>
+          </div>
+          <p class="about-note"><strong>Safety note:</strong> VAYU gives preventive wellness guidance, not medical diagnosis or emergency treatment. Users should consult a doctor for serious or persistent symptoms.</p>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile quick navigation">
+    <button class="bottom-nav-item active" data-page="dashboard">🏠<span>Home</span></button>
+    <button class="bottom-nav-item" data-page="weather">🌦️<span>Weather</span></button>
+    <button class="bottom-nav-item" data-page="health">🩺<span>Health</span></button>
+    <button class="bottom-nav-item" data-page="daily">🗓️<span>Plan</span></button>
+    <button class="bottom-nav-item" data-page="report">📋<span>Report</span></button>
+    <button class="bottom-nav-item" data-page="ayush">🌿<span>AYUSH</span></button>
+    <button class="bottom-nav-item" data-page="exposure">📍<span>Exposure</span></button>
+  </nav>
+
+  <button class="floating-chat-button" id="floatingChatButton" aria-label="Open VAYU AI Assistant">
+    <img src="assets/vayu-logo.svg" alt="" class="floating-chat-logo" />
+    <span class="chat-badge">AI</span>
+  </button>
+
+  <div class="chat-window" id="chatWindow" aria-label="VAYU AI Chatbot">
+    <div class="chat-header">
+      <div class="chat-brand">
+        <img src="assets/vayu-logo.svg" alt="VAYU icon" class="chat-brand-icon" />
+        <div>
+          <strong>VAYU AI</strong>
+          <span>Air + Health Assistant</span>
+        </div>
+      </div>
+      <button id="closeChat" aria-label="Close chatbot">×</button>
+    </div>
+    <div id="chatMessages" class="chat-messages"></div>
+    <form id="chatForm" class="chat-input-row">
+      <input id="chatInput" type="text" placeholder="Ask VAYU..." autocomplete="off" />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script src="app-config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

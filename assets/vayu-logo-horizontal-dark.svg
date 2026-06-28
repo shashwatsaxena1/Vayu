@@ -1,0 +1,31 @@
+<svg width="860" height="280" viewBox="0 0 860 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shieldGradHD" x1="32" y1="20" x2="160" y2="176" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9CD97B"/>
+      <stop offset="1" stop-color="#5FAF3E"/>
+    </linearGradient>
+    <linearGradient id="leafGradHD" x1="84" y1="66" x2="150" y2="152" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A6E270"/>
+      <stop offset="1" stop-color="#72C34E"/>
+    </linearGradient>
+    <linearGradient id="airGradHD" x1="28" y1="92" x2="112" y2="138" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#88B4B3"/>
+      <stop offset="1" stop-color="#6D9797"/>
+    </linearGradient>
+  </defs>
+  <rect width="860" height="280" rx="32" fill="transparent"/>
+  <g transform="translate(18,36) scale(0.92)">
+    <path d="M94 10C116 28 147 38 184 42V113C184 169 150 217 94 236C38 217 4 169 4 113V42C41 38 72 28 94 10Z" fill="#F6FBF4"/>
+    <path d="M94 19C114.3 34.5 143.5 44.3 176 48.9V111.7C176 162 145.3 203.8 94 222C42.7 203.8 12 162 12 111.7V48.9C44.5 44.3 73.7 34.5 94 19Z" stroke="url(#shieldGradHD)" stroke-width="8.5" stroke-linejoin="round"/>
+    <circle cx="64" cy="78" r="17" fill="url(#shieldGradHD)"/>
+    <path d="M34 82C48.8 93.4 58.9 108.6 64.3 127.1C69.7 108.6 79.8 93.4 94.6 82" stroke="url(#shieldGradHD)" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34 101C23.8 99.2 15.8 97.3 8.9 94.5C15.9 100.2 23.7 106.5 29.2 115.8C39.4 117.3 48.9 119.5 57.9 123.2C48.8 126.4 41.1 132.2 36.2 140.5C24.5 139.3 14.4 138.7 4 138.7C14.9 143.4 23.9 148.9 30.7 155.3C42.6 154.1 53.7 155.4 64.5 160.2" stroke="url(#airGradHD)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M137 72C112.7 78.7 99.2 99.2 89.8 127.4C106 125.6 120.4 127.4 132.3 134.3C128.2 155 117.6 173.9 101.1 190.4C136.4 182.5 159.1 154.6 164.7 100.3C155.7 92.5 146.4 83.1 137 72Z" fill="url(#leafGradHD)"/>
+    <path d="M103 183C117.4 158.4 133.6 137.8 152.4 119.3" stroke="#F5FFF4" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(238,64)">
+    <text x="0" y="82" fill="#ECF1ED" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="92" font-weight="800" letter-spacing="8">VAYU</text>
+    <path d="M141 40L158 74H124L141 40Z" fill="#8FD05B"/>
+    <text x="4" y="136" fill="#B7C3B9" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="500">Air  •  Weather  •  Health</text>
+  </g>
+</svg>

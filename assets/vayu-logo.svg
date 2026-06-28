@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FBF4"/>
+      <stop offset="1" stop-color="#E7E1D6"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="148" y1="118" x2="356" y2="378" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8FC96B"/>
+      <stop offset="1" stop-color="#4C8A3E"/>
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="262" y1="186" x2="352" y2="330" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8FD05B"/>
+      <stop offset="1" stop-color="#5FAF3E"/>
+    </linearGradient>
+    <linearGradient id="airGrad" x1="136" y1="214" x2="260" y2="312" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6F9798"/>
+      <stop offset="1" stop-color="#4E777A"/>
+    </linearGradient>
+    <filter id="shadow" x="54" y="50" width="404" height="412" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="16" stdDeviation="22" flood-color="#6D7A63" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#bgGrad)"/>
+  <g filter="url(#shadow)">
+    <path d="M256 92C286.4 118.7 330.2 132.1 382 137.7V240.7C382 324 334.7 394.8 256 421C177.3 394.8 130 324 130 240.7V137.7C181.8 132.1 225.6 118.7 256 92Z" fill="#FFFFFF"/>
+    <path d="M256 104C285.3 127 326.8 140.7 374 146V239.1C374 316.1 330.8 380.4 256 406C181.2 380.4 138 316.1 138 239.1V146C185.2 140.7 226.7 127 256 104Z" stroke="url(#shieldGrad)" stroke-width="11.5" stroke-linejoin="round"/>
+    <path d="M215 214C229.8 214 241.8 201.9 241.8 187C241.8 172.1 229.8 160 215 160C200.2 160 188.2 172.1 188.2 187C188.2 201.9 200.2 214 215 214Z" fill="url(#shieldGrad)"/>
+    <path d="M168 192C191.7 209.8 206.6 232.5 214.7 259.9C222.8 232.5 237.7 209.8 261.4 192" stroke="url(#shieldGrad)" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M168 219C153.6 216.4 141.5 213.3 131.8 209.5C142.1 218.3 153.2 227.7 160.6 240.7C173.6 243.2 187.2 246.4 198.6 251.5C187 255.5 176 264.9 170.1 276.2C151.6 274.3 136.2 273 122 273.1C138.1 279.7 151.8 287.5 162 296.3C180.1 294.4 196.4 296.5 211.7 303.1" stroke="url(#airGrad)" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M319.7 178.7C286.6 187.6 268.1 215.5 255.8 255.1C279.4 252.5 299.3 255.1 315.8 264.8C310.1 293.9 294.6 320.7 271.2 344.2C319.5 333.8 349.4 294.6 356.8 218.6C343.4 207.7 331.1 194.4 319.7 178.7Z" fill="url(#leafGrad)"/>
+    <path d="M275 334C296.1 297.2 318.4 265.7 344.8 238.2" stroke="#F5FFF4" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>
